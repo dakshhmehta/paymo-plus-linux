@@ -1,0 +1,13 @@
+body {
+	padding-top: 15px;
+}
+form.login {
+	margin-bottom: 20px;
+}
+ul {
+	padding-left: 15px;
+}
+ul.no-bullet li, ul.no-bullet > ul li {
+	list-style-type: none;
+	padding: 3px 0px;
+}
