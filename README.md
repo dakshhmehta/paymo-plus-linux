@@ -7,13 +7,14 @@ An application developed for linking time to Paymoapp.com - just like how you wo
 ######pymouse:
 <i>However, the dependancy pymouse has is xlib, which you need to download from [here](http://sourceforge.net/projects/python-xlib/)</i>
 
+
 and then execute the following command to install
     
-<code>
-sudo apt-get install python-pip<br/>
-sudo pip install python-xlib.tar.gz<br/>
+```
+sudo apt-get install python-pip
+sudo pip install python-xlib.tar.gz
 sudo pip install pymouse
-</code>
+```
 
 Once all dependancies are installed, you can start using the application.
 
