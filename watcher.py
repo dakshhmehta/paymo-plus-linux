@@ -3,16 +3,20 @@ import time
 import threading
 import csv
 import os
+from pymouse import PyMouse
 
 _setting = {
-	"away_time": 300 # 5 minute
+	"away_time": 10 # 5 minute
 }
 
 timer = {}
 file_name = "timesheet_%s.csv"%time.time()
 
 away_time = 0;
-last_task = "";
+_last_x = 0
+_last_y = 0
+
+_mouse = PyMouse()
 
 def write_to_file():
 	global timer, file_name
@@ -34,12 +38,13 @@ def print_to_screen():
    	return
 
 def record_windows(winTitle):
-	global timer, last_task, away_time, _setting
+	global timer, _mouse, _last_x, _last_y, away_time, _setting
 
 	_t = 1
+	current_location = _mouse.position()
 
 	# If task is same as previous
-	if last_task == winTitle:
+	if _last_x == current_location[0] and _last_y == current_location[1]:
 		away_time = away_time + 1 # Possiblity of away
 
 		if away_time == _setting['away_time']: # If its away for 1 minute
@@ -58,7 +63,8 @@ def record_windows(winTitle):
 
 	print_to_screen()
 
-	last_task = winTitle
+	_last_x = current_location[0]
+	_last_y = current_location[1]
 
 	return
 
