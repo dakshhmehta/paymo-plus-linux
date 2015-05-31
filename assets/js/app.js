@@ -18,6 +18,16 @@ app.factory('Paymo', ['$http', function($http){
 		},
 		getProjectsWithTasks: function(){
 			return $http.get(url + '/projects?include=tasks&where=active = true and tasks.complete = false');
+		},
+		addTimeEntry: function(task, entry){
+			var _task = {
+				task_id: task.id,
+				date: moment(),
+				duration: entry.seconds,
+				description: entry.title
+			};
+
+			return $http.post(url + '/entries', _task);
 		}
 	};
 }]);
@@ -39,11 +49,11 @@ String.prototype.toHHMMSS = function () {
 app.controller('AppCtrl', ['$scope', 'Paymo', 'csvParser', 'moment', function($scope, Paymo, csvParser, moment){
 	console.log('Application Controller added');
 
-	$scope.apikey = 'c6587fa23e45185f2bdf34f74581e904';
+	$scope.apikey = '';
 
 	$scope.entries = [];
 
-	$scope.totalTime = 0;
+	$scope.t_query = '';
 
 	$scope.authorize = function(){
 		Paymo.init($scope.apikey);
@@ -57,10 +67,7 @@ app.controller('AppCtrl', ['$scope', 'Paymo', 'csvParser', 'moment', function($s
 	$scope.processFile = function(){
 		console.log($scope.csvFile);
 
-		$scope.$apply(function(){
-			$scope.entries = [];
-			$scope.totalTime = 0;
-		});
+		$scope.entries = [];
 
 		$scope.toHHMMSS = function(secs){
 			seconds = "" + secs;
@@ -77,15 +84,65 @@ app.controller('AppCtrl', ['$scope', 'Paymo', 'csvParser', 'moment', function($s
 							time: moment().add(results.data[i][1], 's'),
 							seconds: results.data[i][1]
 						});
-
-						if(! isNaN(parseInt($scope.totalTime) + parseInt(results.data[i][1])))
-							$scope.totalTime = parseInt($scope.totalTime) + parseInt(results.data[i][1]);
 					});
 				}
 			}
 		});
 
 		console.log($scope.entries);
+	};
+
+	$scope.toggleSelection = function(timeEntry){
+		timeEntry.selected = !timeEntry.selected;
+	};
+
+	$scope.countSelectedEntries = function(){
+		var secs = 0;
+
+		angular.forEach($scope.entries, function(entry){
+			if(entry.selected == true)
+				secs += Math.round(entry.seconds);
+		});
+
+		return secs;
+	};
+
+	$scope.countEntries = function(){
+		var secs = 0;
+
+		angular.forEach($scope.entries, function(entry){
+			if(!isNaN(entry.seconds) && entry.title.toLowerCase().indexOf($scope.t_query.toLowerCase()) >= 0)
+				secs += Math.round(entry.seconds);
+		});
+
+		return secs;
+	}
+
+	$scope.selectAllTasks = function(){	
+		angular.forEach($scope.entries, function(entry){
+			if(entry.title.toLowerCase().indexOf($scope.t_query.toLowerCase()) >= 0)
+				entry.selected = true;
+		});
+	};
+
+	$scope.deSelectAllTasks = function(){	
+		angular.forEach($scope.entries, function(entry){
+			if(entry.title.toLowerCase().indexOf($scope.t_query.toLowerCase()) >= 0)
+				entry.selected = false;
+		});
+	};
+
+	$scope.linkTime = function(task){
+		angular.forEach($scope.entries, function(entry, index){
+			if(entry.selected == true){
+				console.log(index);
+
+				Paymo.addTimeEntry(task, entry);
+				$scope.entries.splice(index, 1);
+			}
+		});
+
+		$scope.$apply();
 	};
 }]);
 
