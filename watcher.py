@@ -6,7 +6,7 @@ import os
 from pymouse import PyMouse
 
 _setting = {
-	"away_time": 10 # 5 minute
+	"away_time": 300 # 5 minute
 }
 
 timer = {}
