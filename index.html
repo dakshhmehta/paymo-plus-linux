@@ -49,12 +49,13 @@
 					<div class="panel-title">Projects and Tasks</div>
 				</div>
 				<div class="panel-body">
-					<input placeholder="Filter project/task..." type="text" ng-model="query" class="form-control" style="margin-botom: 15px;" />
-					<ul class="no-bullet" ng-repeat="project in projects | filter:query">
+					<input placeholder="Filter project..." type="text" ng-model="_pquery" class="col-md-6" style="margin-botom: 15px;" />
+					<input placeholder="Filter task..." type="text" ng-model="_tquery" class="col-md-6" style="margin-botom: 15px;" />
+					<ul class="no-bullet" ng-repeat="project in projects | filter:_pquery">
 						<li>
 							<strong>{{ project.name }}</strong>
 							<ul>
-								<li ng-click="linkTime(task)" ng-repeat="task in project.tasks">{{ task.name }}</li>
+								<li ng-click="linkTime(task)" ng-repeat="task in project.tasks | filter:_tquery">{{ task.name }}</li>
 							</ul>
 						</li>
 					</ul>
