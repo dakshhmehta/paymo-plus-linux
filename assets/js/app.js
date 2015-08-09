@@ -49,7 +49,7 @@ String.prototype.toHHMMSS = function () {
 app.controller('AppCtrl', ['$scope', 'Paymo', 'csvParser', 'moment', function($scope, Paymo, csvParser, moment){
 	console.log('Application Controller added');
 
-	$scope.apikey = '';
+	$scope.apikey = '606b70a1019a0d88780ddd479ea10282';
 
 	$scope.entries = [];
 
