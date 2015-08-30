@@ -89,10 +89,10 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr ng-repeat="entry in entries | filter:t_query">
+									<tr ng-repeat="entry in entries  | orderBy:'-seconds' | filter:t_query">
 										<td><input ng-checked="entry.selected" type="checkbox" ng-click="toggleSelection(entry)" /></td>
-										<td ng-class="{highlight: entry.selected}">{{ entry.title }}<br/>{{ entry.date }}</td>
-										<td>{{ entry.seconds.toHHMMSS() }}</td>
+										<td ng-class="{highlight: entry.selected}">{{ entry.title }}<br/>{{ entry.date.format('DD MMM, YYYY') }}</td>
+										<td>{{ toHHMMSS(entry.seconds) }}</td>
 									</tr>
 								</tbody>
 							</table>

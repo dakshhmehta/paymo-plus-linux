@@ -22,10 +22,12 @@ app.factory('Paymo', ['$http', function($http){
 		addTimeEntry: function(task, entry){
 			var _task = {
 				task_id: task.id,
-				date: moment(),
+				date: entry.date.format(),
 				duration: entry.seconds,
 				description: entry.title
 			};
+
+			console.log(entry.date);
 
 			return $http.post(url + '/entries', _task);
 		}
@@ -81,8 +83,9 @@ app.controller('AppCtrl', ['$scope', 'Paymo', 'csvParser', 'moment', function($s
 					$scope.$apply(function(){
 						$scope.entries.push({
 							title: results.data[i][0],
-							time: moment().add(results.data[i][1], 's'),
-							seconds: results.data[i][1]
+							time: moment(results.data[i][2], "YYYY-MM-DD").add(results.data[i][1], 's'),
+							seconds: parseInt(results.data[i][1]),
+							date: moment(results.data[i][2], "YYYY-MM-DD")
 						});
 					});
 				}
